@@ -1,0 +1,35 @@
+---
+# tasks file for install-theforeman
+#
+- name: "Create the directory {{ theforemanpath }} to install theforeman ansible modules"
+  file:
+    path: "{{ theforemanpath }}"
+    state: directory
+    mode: '0700'
+
+- name: "Transfer python2-apypie and theforeman's Collection"
+  copy:
+    src: "files/{{ item }}"
+    dest: "{{ theforemanpath }}"
+  loop:
+    - python2-apypie-0.2.1-1.el7.noarch.rpm
+    - theforeman-foreman-0.7.0.tar.gz
+
+- name: "Find all rpm files in {{ theforemanpath }} folder"
+  find:
+    paths: "{{ theforemanpath }}"
+    patterns: "*.rpm"
+  register: rpm_files
+
+- set_fact:
+    rpm_list: "{{ rpm_files.files | map(attribute='path') | list}}"
+
+- name: "Install RPMs from local copied files"
+  yum:
+    name: "{{ rpm_list }}"
+    disable_gpg_check: yes
+
+- name: Install theforeman ansible collection
+  shell: "/usr/bin/ansible-galaxy collection install {{ theforemanpath }}/theforeman-foreman-0.7.0.tar.gz"
+  register: ansible_galaxy_collection_result
+  changed_when: ("already installed" not in ansible_galaxy_collection_result.stdout)

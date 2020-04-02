@@ -1,0 +1,2 @@
+[theforeman]
+rhel7.lab.example.com ansible_connection=local
