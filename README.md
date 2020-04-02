@@ -17,7 +17,7 @@ Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
+```
 ---
 - hosts: theforeman
   gather_facts: yes
@@ -29,6 +29,7 @@ Including an example of how to use your role (for instance, with variables passe
     theforemanpath: /root/test
   roles:
     - role: ../roles/install-theforeman
+```
 
 License
 -------
